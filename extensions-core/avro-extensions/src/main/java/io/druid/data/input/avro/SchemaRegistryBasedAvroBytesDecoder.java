@@ -18,12 +18,15 @@
  */
 package io.druid.data.input.avro;
 
+import com.metamx.common.logger.Logger;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.metamx.common.parsers.ParseException;
 import com.google.common.annotations.VisibleForTesting;
 import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
-import io.druid.java.util.common.parsers.ParseException;
+import java.io.IOException;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
@@ -35,6 +38,7 @@ import java.nio.ByteBuffer;
 public class SchemaRegistryBasedAvroBytesDecoder implements AvroBytesDecoder
 {
   private final SchemaRegistryClient registry;
+  private static final Logger log = new Logger(SchemaRegistryBasedAvroBytesDecoder.class);
 
   @JsonCreator
   public SchemaRegistryBasedAvroBytesDecoder(
@@ -42,7 +46,11 @@ public class SchemaRegistryBasedAvroBytesDecoder implements AvroBytesDecoder
       @JsonProperty("capacity") Integer capacity
   )
   {
+    log.debug(url)
+    
     int identityMapCapacity = capacity == null ? Integer.MAX_VALUE : capacity;
+    log.debug(identityMapCapacity.toString())
+
     this.registry = new CachedSchemaRegistryClient(url, identityMapCapacity);
   }
 
