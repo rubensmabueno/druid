@@ -46,11 +46,7 @@ public class SchemaRegistryBasedAvroBytesDecoder implements AvroBytesDecoder
       @JsonProperty("capacity") Integer capacity
   )
   {
-    log.debug(url)
-    
     int identityMapCapacity = capacity == null ? Integer.MAX_VALUE : capacity;
-    log.debug(identityMapCapacity.toString())
-
     this.registry = new CachedSchemaRegistryClient(url, identityMapCapacity);
   }
 
